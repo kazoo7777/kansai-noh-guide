@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026年11月25日 20:03",
+  "updatedAt": "2026年11月25日 20:34",
   "totalCount": 113,
   "kansaiCount": 68,
   "sources": [
@@ -76,7 +76,7 @@
         "無料公演"
       ],
       "summary": "京都観世会館での無料公演です。",
-      "url": "https://kyoto-kanze.jp/show_info/schedule",
+      "url": "https://kyoto-kanze.jp/show_info/schedule/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -139,7 +139,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261128show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261128show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -274,7 +274,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261129show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261129show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -384,7 +384,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261201show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261201show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -735,7 +735,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261206show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261206show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -1081,7 +1081,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261211show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261211show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -1150,7 +1150,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261212show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261212show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -1320,7 +1320,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261213show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261213show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -1506,7 +1506,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261218show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261218show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -1550,7 +1550,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261219show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261219show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -1892,7 +1892,7 @@
         "無料公演"
       ],
       "summary": "京都観世会館での無料公演です。",
-      "url": "https://kyoto-kanze.jp/show_info/schedule",
+      "url": "https://kyoto-kanze.jp/show_info/schedule/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -1940,7 +1940,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/show_info/schedule",
+      "url": "https://kyoto-kanze.jp/show_info/schedule/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -2004,7 +2004,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20261227show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20261227show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -2037,8 +2037,8 @@
       "image": ""
     },
     {
-      "id": "f40fd591ba8e",
-      "title": "-->京都観世会 謡初式-->",
+      "id": "9db93c570e70",
+      "title": "京都観世会 謡初式",
       "date": "2027-01-01",
       "dateLabel": "2027年1月1日(金)",
       "time": "",
@@ -2052,7 +2052,7 @@
         "京都観世会自主公演"
       ],
       "summary": "京都観世会館での京都観世会自主公演です。",
-      "url": "https://kyoto-kanze.jp/20270101show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20270101show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -2223,7 +2223,7 @@
         "京都観世会自主公演"
       ],
       "summary": "京都観世会館での京都観世会自主公演です。",
-      "url": "https://kyoto-kanze.jp/20270110show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20270110show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -2405,7 +2405,7 @@
         "無料公演"
       ],
       "summary": "京都観世会館での無料公演です。",
-      "url": "https://kyoto-kanze.jp/show_info/schedule",
+      "url": "https://kyoto-kanze.jp/show_info/schedule/",
       "source": "京都観世会館",
       "image": ""
     },
@@ -2495,13 +2495,13 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20270124show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20270124show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
     {
-      "id": "fc4aec368723",
-      "title": "-->片山定期能 1月公演-->",
+      "id": "823faf3f041e",
+      "title": "片山定期能 1月公演",
       "date": "2027-01-30",
       "dateLabel": "2027年1月30日(土)",
       "time": "",
@@ -2515,7 +2515,7 @@
         "有料公演"
       ],
       "summary": "京都観世会館での有料公演です。",
-      "url": "https://kyoto-kanze.jp/20270130show_meeting/",
+      "url": "https://kyoto-kanze.jp/show_info/20270130show_meeting/",
       "source": "京都観世会館",
       "image": ""
     },
