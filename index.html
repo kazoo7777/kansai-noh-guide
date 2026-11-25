@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#231F1C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="能楽公演ガイド">
+  <title>関西・全国 能楽公演ガイド</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">能</span>
+        <div>
+          <h1 class="brand-title">関西・全国 能楽公演ガイド</h1>
+          <p class="brand-sub" id="updated-info">公演情報を読み込み中...</p>
+        </div>
+      </div>
+      <button type="button" class="info-btn" id="open-sources-btn" aria-label="情報源を確認">
+        情報源
+      </button>
+    </div>
+  </header>
+
+  <!-- 検索・エリア絞り込みバー（スクロール時に上部固定） -->
+  <section class="controls-bar" aria-label="検索と絞り込み">
+    <div class="controls-inner">
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            id="search-input"
+            placeholder="演目・能楽堂・能楽師で検索（例：羽衣、大槻）"
+            autocomplete="off"
+          >
+          <button type="button" id="clear-search-btn" class="clear-btn hidden" aria-label="検索をクリア">✕</button>
+        </div>
+        <select id="month-select" class="month-select" aria-label="月で絞り込む">
+          <option value="all">すべての月</option>
+        </select>
+      </div>
+
+      <!-- エリア切り替えチップ（横スクロール対応） -->
+      <div class="chip-scroll" id="area-chips" role="tablist" aria-label="エリア選択">
+        <!-- JSで動的生成 -->
+      </div>
+
+      <!-- 特徴フィルター（解説あり・初心者向けなど） -->
+      <div class="quick-filter-row" id="quick-filters">
+        <button type="button" class="quick-chip" data-filter="beginner">解説・初心者向け</button>
+        <button type="button" class="quick-chip" data-filter="weekend">土日祝のみ</button>
+        <button type="button" class="quick-chip" data-filter="free">無料公演</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- メインコンテンツ -->
+  <main class="main-content">
+    <!-- 件数サマリー -->
+    <div class="status-bar">
+      <p id="result-count" class="result-count">0件の公演</p>
+      <button type="button" id="reset-filters-btn" class="reset-link hidden">条件をリセット</button>
+    </div>
+
+    <!-- 一覧ビュー（初期表示） -->
+    <section id="view-list" class="view-section">
+      <div id="performance-list" class="performance-list">
+        <!-- JSで公演カードを生成 -->
+      </div>
+      <div id="empty-state" class="empty-state hidden">
+        <p class="empty-title">条件に一致する公演が見つかりませんでした</p>
+        <p class="empty-desc">エリアや検索キーワードを変更してお試しください。</p>
+      </div>
+    </section>
+
+    <!-- カレンダービュー -->
+    <section id="view-calendar" class="view-section hidden">
+      <div class="calendar-card">
+        <div class="calendar-header">
+          <button type="button" id="cal-prev-btn" class="cal-nav-btn" aria-label="前の月">‹</button>
+          <h2 id="cal-month-title" class="cal-month-title">2026年12月</h2>
+          <button type="button" id="cal-next-btn" class="cal-nav-btn" aria-label="次の月">›</button>
+        </div>
+        <div class="calendar-weekdays">
+          <span class="sun">日</span>
+          <span>月</span>
+          <span>火</span>
+          <span>水</span>
+          <span>木</span>
+          <span>金</span>
+          <span class="sat">土</span>
+        </div>
+        <div id="calendar-grid" class="calendar-grid">
+          <!-- JSで日付セルを生成 -->
+        </div>
+      </div>
+      <div class="calendar-day-section">
+        <h3 id="cal-selected-date-title" class="cal-selected-title">日付をタップすると公演が表示されます</h3>
+        <div id="calendar-day-list" class="performance-list"></div>
+      </div>
+    </section>
+
+    <!-- お気に入りビュー -->
+    <section id="view-favorites" class="view-section hidden">
+      <div id="favorites-list" class="performance-list"></div>
+      <div id="favorites-empty" class="empty-state hidden">
+        <p class="empty-title">お気に入りの公演はまだありません</p>
+        <p class="empty-desc">気になる公演の「♡」ボタンをタップすると、ここに保存されます。</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- 公演詳細モーダル（iPhoneボトムシート風） -->
+  <div id="detail-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-sheet">
+      <div class="modal-handle" aria-hidden="true"></div>
+      <div class="modal-header">
+        <span id="modal-pref-badge" class="badge badge-kansai">大阪</span>
+        <button type="button" id="modal-close-btn" class="modal-close" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- JSで詳細を描画 -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="modal-fav-btn" class="btn-secondary">♡ お気に入り</button>
+        <a id="modal-official-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary">
+          公式サイトで詳細を見る ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 情報源モーダル -->
+  <div id="sources-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="sources-title">
+    <div class="modal-sheet modal-sheet-small">
+      <div class="modal-handle" aria-hidden="true"></div>
+      <div class="modal-header">
+        <h2 id="sources-title" class="sources-title">データ取得元サイト</h2>
+        <button type="button" id="sources-close-btn" class="modal-close" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body" id="sources-body">
+        <!-- JSで取得状況を描画 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- iPhone操作向け・下部固定ナビゲーションバー -->
+  <nav class="bottom-nav" aria-label="表示切替">
+    <button type="button" class="nav-item active" data-view="list">
+      <span class="nav-icon" aria-hidden="true">☰</span>
+      <span class="nav-label">一覧</span>
+    </button>
+    <button type="button" class="nav-item" data-view="calendar">
+      <span class="nav-icon" aria-hidden="true">📅</span>
+      <span class="nav-label">カレンダー</span>
+    </button>
+    <button type="button" class="nav-item" data-view="favorites">
+      <span class="nav-icon" aria-hidden="true">♡</span>
+      <span class="nav-label">お気に入り</span>
+      <span id="fav-nav-badge" class="nav-badge hidden">0</span>
+    </button>
+  </nav>
+
+  <!-- 直接HTMLを開いた場合でも動作するようJSデータを読み込み -->
+  <script src="data/performances.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
