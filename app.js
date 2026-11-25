@@ -74,6 +74,19 @@
       .replace(/'/g, "&#39;");
   }
 
+  // 外部リンクのURL安全性チェック（http / https のみ許可）
+  function safeUrl(rawUrl) {
+    try {
+      const parsed = new URL(String(rawUrl || "").trim());
+      if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+        return parsed.href;
+      }
+    } catch {
+      // 不正なURLは無効扱いとする
+    }
+    return "";
+  }
+
   // お気に入りの読み込み・保存
   function loadFavorites() {
     try {
@@ -369,7 +382,7 @@
 
     const tagsHtml =
       item.tags && item.tags.length > 0
-        ? `<div class="card-badges" style="margin-bottom:10px;">${item.tags
+        ? `<div class="card-badges modal-tags-wrap">${item.tags
             .map((t) => `<span class="badge badge-tag">${esc(t)}</span>`)
             .join("")}</div>`
         : "";
@@ -388,7 +401,19 @@
       ${item.summary ? `<p class="detail-summary">${esc(item.summary)}</p>` : ""}
     `;
 
-    el.modalOfficialLink.href = item.url || "#";
+    // http / https の安全なURLのみリンクとして有効化
+    const validUrl = safeUrl(item.url);
+    if (validUrl) {
+      el.modalOfficialLink.href = validUrl;
+      el.modalOfficialLink.textContent = "公式サイトで詳細を見る ↗";
+      el.modalOfficialLink.classList.remove("is-disabled");
+      el.modalOfficialLink.removeAttribute("aria-disabled");
+    } else {
+      el.modalOfficialLink.removeAttribute("href");
+      el.modalOfficialLink.textContent = "公式リンクなし";
+      el.modalOfficialLink.classList.add("is-disabled");
+      el.modalOfficialLink.setAttribute("aria-disabled", "true");
+    }
     updateModalFavButton();
     el.detailModal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
@@ -411,7 +436,7 @@
   function openSourcesModal() {
     const sources = (state.data && state.data.sources) || [];
     el.sourcesBody.innerHTML = `
-      <p style="margin-top:0;font-size:13px;color:var(--text-sub);">
+      <p class="sources-updated">
         最終更新：${esc(state.data ? state.data.updatedAt : "-")}
       </p>
       <ul class="source-list">
@@ -425,7 +450,7 @@
           )
           .join("")}
       </ul>
-      <p style="margin-bottom:0;font-size:12px;color:var(--text-muted);">
+      <p class="sources-note">
         ※重複する公演は自動で整理しています。最新のチケット状況や開演時間は各公式サイトをご確認ください。
       </p>
     `;

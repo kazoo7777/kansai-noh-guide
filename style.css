@@ -814,6 +814,41 @@ body {
   color: var(--accent-ai);
 }
 
+.sources-updated {
+  margin-top: 0;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.sources-note {
+  margin-bottom: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.modal-tags-wrap {
+  margin-bottom: 10px;
+}
+
+.btn-primary.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* 免責事項フッター */
+.site-footer {
+  margin-top: 28px;
+  padding: 14px 12px 6px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.footer-note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
 /* 下部固定タブバー（iPhone向け） */
 .bottom-nav {
   position: fixed;

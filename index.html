@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
+  >
+  <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#231F1C">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -114,6 +119,14 @@
         <p class="empty-desc">気になる公演の「♡」ボタンをタップすると、ここに保存されます。</p>
       </div>
     </section>
+
+    <!-- 免責事項フッター -->
+    <footer class="site-footer" aria-label="免責事項">
+      <p class="footer-note">
+        本サイトは各能楽堂・関連サイトの公開情報をもとに自動収集した<strong>非公式のまとめサイト</strong>です。
+        公演の中止・時間変更・チケット完売などが反映されない場合がありますので、お出かけ前に必ず各公式サイトで最新情報をご確認ください。
+      </p>
+    </footer>
   </main>
 
   <!-- 公演詳細モーダル（iPhoneボトムシート風） -->
