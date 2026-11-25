@@ -88,9 +88,11 @@ def clean_html(raw_html: str) -> str:
     """HTMLタグを除去し、見やすいプレーンテキストに整形します。"""
     if not raw_html:
         return ""
-    text = re.sub(r"<br\s*/?>", "\n", raw_html, flags=re.I)
+    text = re.sub(r"<!--.*?-->", "", raw_html, flags=re.S)
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.I)
     text = re.sub(r"</(p|div|li|tr|h[1-6])>", "\n", text, flags=re.I)
     text = re.sub(r"<[^>]+>", "", text)
+    text = text.replace("-->", "").replace("<!--", "")
     text = html.unescape(text)
     # 連続する空白・改行を整理
     lines = [re.sub(r"[ \t\u3000]+", " ", line).strip() for line in text.splitlines()]
@@ -306,7 +308,8 @@ def scrape_kongo() -> list:
 
 def scrape_kyoto_kanze() -> list:
     """京都観世会館（京都）のイベントカレンダーから公演を取得します。"""
-    url = "https://kyoto-kanze.jp/show_info/schedule"
+    # 相対リンク（../xxxx/）を正しく解決するため末尾スラッシュを付ける
+    url = "https://kyoto-kanze.jp/show_info/schedule/"
     page = fetch_text(url)
     items = []
     # 月ごとのブロック（<h1>YYYY年M月</h1>）で分割
@@ -332,7 +335,7 @@ def scrape_kyoto_kanze() -> list:
                 if not title or "休館" in title:
                     continue
                 link_m = re.search(r'href="([^"]+)"', inner)
-                ev_url = urllib.parse.urljoin(url, link_m.group(1)) if link_m else url
+                ev_url = urllib.parse.urljoin(url, link_m.group(1).strip()) if link_m else url
                 kind_tag = {
                     "R": "京都観世会自主公演",
                     "Y": "有料公演",
