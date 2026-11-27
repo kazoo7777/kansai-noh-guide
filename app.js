@@ -11,6 +11,7 @@
 
   const FAV_STORAGE_KEY = "kansai_noh_favorites_v1";
   const KANSAI_OTHERS = ["奈良", "滋賀", "和歌山"];
+  const NEW_DAYS = 4; // サイトに追加されてからNEWマークを表示する日数（追加日を含めて4日間）
 
   // アプリケーション状態
   const state = {
@@ -36,6 +37,7 @@
     monthSelect: document.getElementById("month-select"),
     areaChips: document.getElementById("area-chips"),
     quickFilters: document.getElementById("quick-filters"),
+    quickNewBtn: document.getElementById("quick-new-btn"),
     resultCount: document.getElementById("result-count"),
     resetFiltersBtn: document.getElementById("reset-filters-btn"),
     viewList: document.getElementById("view-list"),
@@ -85,6 +87,18 @@
       // 不正なURLは無効扱いとする
     }
     return "";
+  }
+
+  // 追加日(firstSeen)を含めて4日以内かどうかを判定する
+  function isNewPerformance(item) {
+    const fs = item && item.firstSeen;
+    if (!fs || !/^\d{4}-\d{2}-\d{2}$/.test(fs)) return false;
+    const [y, m, d] = fs.split("-").map(Number);
+    const seenDate = new Date(y, m - 1, d);
+    const now = new Date();
+    const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const diffDays = Math.floor((todayDate - seenDate) / 86400000);
+    return diffDays >= 0 && diffDays < NEW_DAYS;
   }
 
   // お気に入りの読み込み・保存
@@ -161,6 +175,9 @@
       if (!matchesArea(item, state.selectedArea)) return false;
       if (state.selectedMonth !== "all" && !item.date.startsWith(state.selectedMonth)) return false;
 
+      if (state.quickFilters.has("new")) {
+        if (!isNewPerformance(item)) return false;
+      }
       if (state.quickFilters.has("beginner")) {
         const hay = `${item.title} ${item.summary} ${(item.tags || []).join(" ")}`;
         if (!/解説|初心者|体験|レクチャー|講座|入門/.test(hay)) return false;
@@ -235,8 +252,10 @@
     const wdNames = ["日", "月", "火", "水", "木", "金", "土"];
     const wdClass = dow === 0 ? "is-sun" : dow === 6 ? "is-sat" : "";
     const isFav = state.favorites.has(item.id);
+    const isNew = isNewPerformance(item);
     const prefClass = item.region === "関西" ? "badge-kansai" : "badge-other";
 
+    const newBadgeHtml = isNew ? '<span class="badge badge-new">NEW</span>' : "";
     const tagsHtml = (item.tags || [])
       .slice(0, 2)
       .map((t) => `<span class="badge badge-tag">${esc(t)}</span>`)
@@ -251,7 +270,7 @@
         : "";
 
     return `
-      <article class="perf-card" data-id="${esc(item.id)}">
+      <article class="perf-card ${isNew ? "is-new" : ""}" data-id="${esc(item.id)}">
         <div class="date-box ${wdClass}">
           <span class="date-month">${m}月</span>
           <span class="date-day">${d}</span>
@@ -260,6 +279,7 @@
         <div class="card-body">
           <div class="card-top-row">
             <div class="card-badges">
+              ${newBadgeHtml}
               <span class="badge ${prefClass}">${esc(item.prefecture)}</span>
               ${tagsHtml}
             </div>
@@ -380,9 +400,11 @@
         ? `<ul class="detail-programs">${item.programs.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`
         : "公式サイトをご確認ください";
 
+    const isNew = isNewPerformance(item);
+    const newBadgeHtml = isNew ? '<span class="badge badge-new">NEW</span>' : "";
     const tagsHtml =
-      item.tags && item.tags.length > 0
-        ? `<div class="card-badges modal-tags-wrap">${item.tags
+      isNew || (item.tags && item.tags.length > 0)
+        ? `<div class="card-badges modal-tags-wrap">${newBadgeHtml}${(item.tags || [])
             .map((t) => `<span class="badge badge-tag">${esc(t)}</span>`)
             .join("")}</div>`
         : "";
@@ -397,6 +419,7 @@
         <tr><th>演目</th><td>${programsHtml}</td></tr>
         ${item.price ? `<tr><th>料金</th><td>${esc(item.price)}</td></tr>` : ""}
         <tr><th>情報元</th><td>${esc(item.source)}</td></tr>
+        ${item.firstSeen ? `<tr><th>掲載日</th><td>${esc(item.firstSeen)}${isNew ? "（新着）" : ""}</td></tr>` : ""}
       </table>
       ${item.summary ? `<p class="detail-summary">${esc(item.summary)}</p>` : ""}
     `;
@@ -480,6 +503,12 @@
     el.viewFavorites.classList.toggle("hidden", state.activeView !== "favorites");
 
     renderAreaChips();
+    if (el.quickNewBtn) {
+      const areaNewCount = state.performances.filter(
+        (it) => matchesArea(it, state.selectedArea) && isNewPerformance(it)
+      ).length;
+      el.quickNewBtn.textContent = areaNewCount > 0 ? `NEW 新着のみ (${areaNewCount})` : "NEW 新着のみ";
+    }
     if (state.activeView === "list") renderListView(filtered);
     if (state.activeView === "calendar") renderCalendarView(filtered);
     if (state.activeView === "favorites") renderFavoritesView();

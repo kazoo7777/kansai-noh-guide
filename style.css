@@ -280,6 +280,18 @@ body {
   font-weight: 600;
 }
 
+.quick-chip-new {
+  border-color: rgba(181, 55, 42, 0.35);
+  color: var(--accent-shu);
+  font-weight: 600;
+}
+
+.quick-chip-new.active {
+  background: var(--accent-shu);
+  border-color: var(--accent-shu);
+  color: #fff;
+}
+
 /* メインエリア */
 .main-content {
   max-width: 900px;
@@ -347,6 +359,10 @@ body {
 
 .perf-card:active {
   transform: scale(0.99);
+}
+
+.perf-card.is-new {
+  border-left: 4px solid var(--accent-shu);
 }
 
 /* 左側・日付バッジ */
@@ -435,6 +451,13 @@ body {
 .badge-tag {
   background: var(--accent-gold-soft);
   color: var(--accent-gold);
+}
+
+.badge-new {
+  background: var(--accent-shu);
+  color: #fff;
+  letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
 .fav-btn {

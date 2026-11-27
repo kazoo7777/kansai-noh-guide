@@ -787,15 +787,24 @@ def scrape_nohgoyomi(max_pages: int = 5) -> list:
     return items
 
 
-def deduplicate(items: list) -> list:
-    """同じ日付・会場・類似タイトルの公演重複を整理し、情報が充実している方を残します。"""
+def make_dedup_key(item: dict) -> tuple:
+    """重複整理および既存公演の照合に使う正規化キーを生成します。"""
     def normalize_key(text: str) -> str:
-        t = re.sub(r"[\s　・\-－―「」『』（）()【】\[\]第\d回]", "", text)
+        t = re.sub(r"[\s　・\-－―「」『』（）()【】\[\]第\d回]", "", text or "")
         return t[:14].lower()
 
+    return (
+        item.get("date", ""),
+        normalize_key(item.get("venue", "")),
+        normalize_key(item.get("title", "")),
+    )
+
+
+def deduplicate(items: list) -> list:
+    """同じ日付・会場・類似タイトルの公演重複を整理し、情報が充実している方を残します。"""
     best_by_key = {}
     for item in items:
-        key = (item["date"], normalize_key(item["venue"]), normalize_key(item["title"]))
+        key = make_dedup_key(item)
         # 情報量スコア（演目数＋料金＋時間＋画像＋公式優先）
         score = (
             len(item["programs"]) * 3
@@ -808,6 +817,49 @@ def deduplicate(items: list) -> list:
         if not prev or score > prev[0]:
             best_by_key[key] = (score, item)
     return [v[1] for v in best_by_key.values()]
+
+
+def apply_first_seen(items: list, json_path: Path, today_str: str) -> int:
+    """
+    前回のperformances.jsonから初回掲載日(firstSeen)を引き継ぎ、
+    今回新しく出現した公演だけに今日の日付を記録します。
+    ※既存ファイルが無い初回実行時、およびfirstSeen未記録の既存公演は空文字（NEWなし）として扱い、
+      導入初日に全件がNEWにならないようにします。
+    """
+    if not json_path.exists():
+        for item in items:
+            item["firstSeen"] = ""
+        return 0
+
+    try:
+        prev_data = json.loads(json_path.read_text(encoding="utf-8"))
+        prev_items = prev_data.get("performances", [])
+    except Exception:
+        for item in items:
+            item["firstSeen"] = ""
+        return 0
+
+    seen_by_id = {}
+    seen_by_key = {}
+    for prev in prev_items:
+        # すでに掲載済みの公演で firstSeen が未設定なら空文字（NEWなし）として記憶
+        fs = prev.get("firstSeen", "")
+        if prev.get("id"):
+            seen_by_id[prev["id"]] = fs
+        seen_by_key[make_dedup_key(prev)] = fs
+
+    new_count = 0
+    for item in items:
+        uid = item.get("id", "")
+        key = make_dedup_key(item)
+        if uid in seen_by_id:
+            item["firstSeen"] = seen_by_id[uid]
+        elif key in seen_by_key:
+            item["firstSeen"] = seen_by_key[key]
+        else:
+            item["firstSeen"] = today_str
+            new_count += 1
+    return new_count
 
 
 def main():
@@ -846,6 +898,9 @@ def main():
     merged = deduplicate(all_items)
     merged.sort(key=lambda x: (x["date"], x["time"], x["venue"]))
 
+    json_path = DATA_DIR / "performances.json"
+    new_count = apply_first_seen(merged, json_path, today_str)
+
     kansai_count = sum(1 for x in merged if x["region"] == "関西")
     now_label = datetime.datetime.now().strftime("%Y年%m月%d日 %H:%M")
 
@@ -853,12 +908,12 @@ def main():
         "updatedAt": now_label,
         "totalCount": len(merged),
         "kansaiCount": kansai_count,
+        "newCount": new_count,
         "sources": source_stats,
         "performances": merged,
     }
 
     # JSONファイル保存
-    json_path = DATA_DIR / "performances.json"
     json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # 直接ブラウザで開く場合用のJSファイルも保存
@@ -870,7 +925,7 @@ def main():
         encoding="utf-8",
     )
 
-    print(f"\n完了しました！ 合計 {len(merged)}件（うち関西 {kansai_count}件）")
+    print(f"\n完了しました！ 合計 {len(merged)}件（うち関西 {kansai_count}件 / 本日の新着 {new_count}件）")
     print(f"保存先: {json_path}")
 
 
